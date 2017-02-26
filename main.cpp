@@ -7,38 +7,13 @@
 #include "Packets.h"
 #include "Keyboard.h"
 #include "DumpParser.h"
+#include "KeyboardPainting.h"
+
 #define MAX_STR 255
 
 using namespace std;
 
 Keyboard* keyboard;
-
-void printInfo(){
-    wchar_t wstr[MAX_STR];
-    hid_get_manufacturer_string(keyboard->getDevice(), wstr, MAX_STR);
-    cout << "Print" << endl;
-    printf("Manufacturer String: %ls\n", wstr);
-
-    // Read the Product String
-    hid_get_product_string(keyboard->getDevice(), wstr, MAX_STR);
-    printf("Product String: %ls\n", wstr);
-
-    // Read the Serial Number String
-    hid_get_serial_number_string(keyboard->getDevice(), wstr, MAX_STR);
-    printf("Serial Number String: (%d) %ls\n", wstr[0], wstr);
-
-    // Read Indexed String 1
-    hid_get_indexed_string(keyboard->getDevice(), 1, wstr, MAX_STR);
-    printf("Indexed String 1: %ls\n", wstr);
-}
-
-int writeCommand(char* buffer, int length){
-    return hid_send_feature_report(keyboard->getDevice(), (unsigned char*) buffer, length);
-}
-
-void printColor(KeyColor color){
-    cout << "Color(r: " << hex << (unsigned int) color.r << " g: " << (unsigned int) color.g << " b: " << (unsigned int) color.b << ")" << endl;
-}
 
 void doFanciStuff(DisplayState state){
     std::vector<std::pair<ColorKey, KeyColor>> newMap;
@@ -138,14 +113,8 @@ void doFanciStuff(DisplayState state){
     keyboard->setStaticColor(state ,newMap);
 }
 
-/*
- F8 00 00 00 DE 01 01 00
- 08 08 08 00 DE 01 02 00
- F8 F8 00 00 ED 01 03 00
- 7B 00 85 00 21 00 00 00
 
-  */
-void printData(PacketColorData& pdata){
+void printData(PacketFadeColorData& pdata){
     cout << "--------------------------------------" << endl;
     cout << "PacketID:    " << hex << pdata.packetId << dec << endl;
     cout << "Metaslot:    " << pdata.metaId << endl;
@@ -156,7 +125,7 @@ void printData(PacketColorData& pdata){
     KeyColor current = pdata.getStartColor();
     for(int i = 0;i<pdata.entryCount;i++){
         currentSpeed+=pdata.entries[i].speed;
-        current -= pdata.entries[i].asColor();
+        current -= pdata.entries[i].getColor();
         cout << "Entry[" << i << "]:" << endl;
         cout << "     Index : " << (int) pdata.entries[i].index << endl;
         cout << "     Speed : " << (int) pdata.entries[i].speed << " (" << ((float) pdata.entries[i].speed / pdata.maxTime) << " -> "<<((float) currentSpeed / pdata.maxTime)<<")" << endl;
@@ -173,10 +142,9 @@ void printData(PacketColorData& pdata){
 }
 
 int main(){
-    cout << static_cast<ColorKey>(200) << endl;
     /*
     string dump =
-                    "00000000  0B 00 00 00 7B 00 00 00 21 00 01 00 85 00 00 00  . . . . { . . . ! . . . \u0085 . . .  \n"
+                            "00000000  0B 00 00 00 7B 00 00 00 21 00 01 00 85 00 00 00  . . . . { . . . ! . . . \u0085 . . .  \n"
                             "00000010  21 00 02 00 00 7B 00 00 21 00 03 00 00 85 00 00  ! . . . . { . . ! . . . . \u0085 . .  \n"
                             "00000020  21 00 04 00 00 00 7B 00 21 00 05 00 00 00 85 00  ! . . . . . { . ! . . . . . \u0085 .  \n"
                             "00000030  21 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ! . . . . . . . . . . . . . . .  \n"
@@ -222,146 +190,98 @@ int main(){
         return 1;
     }
 
-    //auto hwid = hid_open(0x1770, 0xff00, 0);
-    int res;
-    unsigned char buf[65];
-
-    int i;
-
-
     // Enumerate and print the HID devices on the system
     struct hid_device_info *devs, *cur_dev;
 
     devs = hid_enumerate(0x0, 0x0);
     cur_dev = devs;
     while (cur_dev) {
-        printf("Device Found\n  type: %04hx %04hx\n  path: %s\n  serial_number: %ls",
-               cur_dev->vendor_id, cur_dev->product_id, cur_dev->path, cur_dev->serial_number);
-        printf("\n");
-        printf("  Manufacturer: %ls\n", cur_dev->manufacturer_string);
-        printf("  Product:      %ls\n", cur_dev->product_string);
+        printf("Device '%ls' from %ls\n"
+               "  VendorID      : %04hx\n"
+               "  ProductID     : %04hx\n"
+               "  Path          : %s\n"
+               "  Serial Number : %ls\n",
+               cur_dev->product_string, cur_dev->manufacturer_string, cur_dev->vendor_id, cur_dev->product_id, cur_dev->path, cur_dev->serial_number);
         printf("\n");
         cur_dev = cur_dev->next;
     }
     hid_free_enumeration(devs);
 
     hid_init();
-    keyboard = new Keyboard(0x1038, 0x1600, 0);
-    // Open the device using the VID, PID,
-    // and optionally the Serial number.
-    cout << "Open" << endl;
+    keyboard = new Keyboard(0x1038, 0x1600, nullptr); //Logitech havnt a serial number....
     if(!keyboard->isValid()){
+        delete keyboard;
         cerr << "Invalid keyboard" << endl;
-        return -1;
+        usleep(100);
+        return 2;
     }
-    // Read the Manufacturer String
 
-
-    /*
-    // Toggle LED (cmd 0x80). The first byte is the report number (0x0).
-    buf[0] = 0x0;
-    buf[1] = 0x80;
-    res = hid_write(handle, buf, 65);
-
-    // Request state (cmd 0x81). The first byte is the report number (0x0).
-    buf[0] = 0x0;
-    buf[1] = 0x81;
-    res = hid_write(handle, buf, 65);
-*/
-
-    cout << NUM_FIRST  << "- " << NUM_1 << endl;
-    char* buffer;
     srand(time(NULL));
     int round = 0;
+
+    auto keyMapping = Mapping::buildMapping();
+    int keysColumnsSize = 23;
+    int keysRowSize = 6;
+    int bulkSize = 3;
+
+
+    KeyColor mapping[] = {{0xff,0,0},{0x80,0x10,0x10},{0x30,0x00,0x0}}; //,{0xff,0,0},{0xff,0,0},{0,0,0xff}, {0,0,0xff}, {0xff,0,0xff},{0xff,0,0xff}
+
+    int rowMapping[] {0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
+    int rowMappingSize = 12;
+
+    int animationLoopedCounter = 0;
     while(true){
         DisplayState state = DisplayState::ACTIVE;
+        //std::vector<ReactiveKey> newMap;
+        std::vector<std::pair<ColorKey, KeyColor>> newMap;
 
-       // for(int i = 0;i<size;i++){a
-        /*
-        int time = 33;
-        PacketColorData data = pdata;
-
-        data.setStartColor({133,132,132});
-        data.entries[0] = PacketColorEntry{0x00, 132, 132, 0,  time, 1, 0};
-        data.entries[5] = PacketColorEntry{0x01+122, 0x01+123, 0x01, 0, time, 0, 0};
-
-        KeyColor start = {0x00,0x00,0x00};
-        KeyColor current = {start.r, start.g, start.b};
-        KeyColor op;
-        printColor(current);
-
-        op = {0x01, 0x00, 0x00};
-        data.entries[0] = PacketColorEntry{op.r, op.g, op.b, 0, time, 1, 0};
-        current -= op;
-        printColor(current);
-
-        op = {0xff, 0x00, 0x0};
-        data.entries[1] = PacketColorEntry{op.r, op.g, op.b, 0, time, 2, 0};
-        current -= op;
-        printColor(current);
-
-        op = {0xff, 0x00, 0x00};
-        data.entries[2] = PacketColorEntry{op.r, op.g, op.b, 0, time, 3, 0};
-        current -= op;
-        printColor(current);
-
-        /*
-        op = {0x00, 0xff, 0x01};
-        data.entries[3] = PacketColorEntry{op.r, op.g, op.b, 0, time, 4, 0};
-        current -= op;
-        printColor(current);
-
-        op = {0x01, 0x01, 0x00};
-        data.entries[4] = PacketColorEntry{op.r, op.g, op.b, 0, time, 0, 0};
-        current -= op;
-        printColor(current);
+        if(animationLoopedCounter%5<3){
+            //Shift the columns
+            for(int i = 0;i<keysColumnsSize;i++){
+                for(int y = 0;y<6;y++) {
+                    ColorKey key = keyMapping[i][y];
+                    if(key != ColorKey::EMPTY){
+                        newMap.push_back({key, (i+round)%keysColumnsSize > (bulkSize-1) ? KeyColor{0,0,0} : mapping[(i+round)%keysColumnsSize]});
+                    }
+                }
+            }
+            newMap.push_back({ColorKey::LOGO, mapping[0]});
+            if((round-1)%keysColumnsSize == 0 && round != 1){
+                for(int i = 0;i<bulkSize;i++)
+                    mapping[i] >> 1;
+                animationLoopedCounter++; if(animationLoopedCounter %5>=3) round = 0;
+            }
+        } else {
+            //Shift the rows!
+            for(int i = 0;i<keysRowSize;i++){
+                for(int x = 0;x<keysColumnsSize;x++){
+                    ColorKey key = keyMapping[x][keysRowSize-i-1];
+                    if(key != ColorKey::EMPTY){
+                        if(i < rowMapping[round%rowMappingSize])
+                            newMap.push_back({key, {0xff,0,0}});
+                        else
+                            newMap.push_back({key, {0x00,0,0}});
+                    }
+                }
+            }
+            if(round%rowMappingSize  == 0 && round != 0){ animationLoopedCounter++; if(animationLoopedCounter%5<3) round = 0;}
+        }
 
 
-        data.entryCount = 3;
-        data.maxTime = time * data.entryCount;
 
-        data.metaId = 1;
+        //for(ColorKey key = ColorKey::A; key <= ColorKey::Z; key = key + 1)
+        //    newMap.push_back({key, color, color1, 1.5});
 
-        //data.setStartColor(start);
-        hid_send_feature_report(keyboard->getDevice(), (unsigned char*) &data, sizeof(data));
-        printData(data);
-        //keyboard->setStaticColor(state ,ColorKey::A, {rand() % 255, rand() % 255, rand() % 255});
-        keyboard->setKeyMetaSlot(state, ColorKey::B, 1);
-        */
+        keyboard->setStaticColor(state, newMap);
 
-        std::vector<ReactiveKey> newMap;
-        KeyColor color = {255,0,0};
-        KeyColor color1 = {0,255,0};
-        for(ColorKey key = ColorKey::A; key <= ColorKey::Z; key = key + 1)
-            newMap.push_back({key, color, color1, 1.5});
-
-        keyboard->setReactiveColor(state, newMap);
         //doFanciStuff(DisplayState::ACTIVE);
         keyboard->setDisplayState(state);
-/*
-        buffer = new char[0x20];
-        memset(buffer, 0, 0x20);
-        buffer[0] = 0x0D;
-        buffer[2] = 0x00;
-        cout << "Wrote!" << hid_write(keyboard->getDevice(), (unsigned char*) buffer, 0x20) << endl;
-        */
+
         round++;
-        usleep(1000*800); //Min 10.000
+        usleep(1000*200); //Min 10.000
     }
 
-    /*
-    buffer = new unsigned char[0x20];
-    memset(buffer, 0, 0x20);
-    buffer[0] = 0x0D;
-
-    cout << "Wrote!" << hid_send_feature_report(handle,buffer, 0x20) << endl;
-    cout << "Read:" << endl;
-    // Read requested state
-    res = hid_get_feature_report(handle, buffer, 0x20);
-    */
-    // Finalize the hidapi library
-    cout << "Done!" << endl;
-    res = hid_exit();
-
+    hid_exit();
     return 0;
 }

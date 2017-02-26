@@ -12,8 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7cd90898-bb4b-452c-929b-d10819817325" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DumpParser.cpp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DumpParser.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KeyboardMapping.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KeyboardPainting.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/M800Controler.iml" afterPath="$PROJECT_DIR$/.idea/M800Controler.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
@@ -41,11 +41,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="11" column="41" selection-start-line="11" selection-start-column="41" selection-end-line="11" selection-end-column="41" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="691">
-              <caret line="335" column="53" selection-start-line="335" selection-start-column="53" selection-end-line="335" selection-end-column="53" />
+            <state relative-caret-position="141">
+              <caret line="152" column="38" selection-start-line="152" selection-start-column="38" selection-end-line="152" selection-end-column="38" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -56,10 +66,11 @@
       <file leaf-file-name="DumpParser.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DumpParser.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="680">
-              <caret line="98" column="62" selection-start-line="98" selection-start-column="62" selection-end-line="98" selection-end-column="62" />
+            <state relative-caret-position="1404">
+              <caret line="78" column="57" selection-start-line="78" selection-start-column="57" selection-end-line="78" selection-end-column="57" />
               <folding>
                 <element signature="e#46#69#0" expanded="true" />
+                <marker date="1488045319129" expanded="true" signature="2510:3897" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -68,18 +79,8 @@
       <file leaf-file-name="Keyboard.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Keyboard.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="string_conversions.h" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/include/c++/6/ext/string_conversions.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+            <state relative-caret-position="648">
+              <caret line="46" column="20" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -95,21 +96,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="basic_string.h" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/include/c++/6/bits/basic_string.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="5421" column="2" selection-start-line="5421" selection-start-column="2" selection-end-line="5421" selection-end-column="2" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Keyboard.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Keyboard.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="886">
-              <caret line="113" column="129" selection-start-line="113" selection-start-column="129" selection-end-line="113" selection-end-column="129" />
+            <state relative-caret-position="598">
+              <caret line="96" column="111" selection-start-line="96" selection-start-column="111" selection-end-line="96" selection-end-column="111" />
               <folding>
                 <element signature="e#46#67#0" expanded="true" />
               </folding>
@@ -117,21 +108,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="stl_vector.h" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/include/c++/6/bits/stl_vector.h">
+      <file leaf-file-name="Definitions.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Definitions.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="454">
-              <caret line="1173" column="6" selection-start-line="1173" selection-start-column="6" selection-end-line="1173" selection-end-column="6" />
+            <state relative-caret-position="940">
+              <caret line="192" column="27" selection-start-line="192" selection-start-column="27" selection-end-line="192" selection-end-column="27" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Definitions.h" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Definitions.h">
+      <file leaf-file-name="KeyboardPainting.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/KeyboardPainting.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1310">
-              <caret line="168" column="24" selection-start-line="168" selection-start-column="24" selection-end-line="168" selection-end-column="24" />
+            <state relative-caret-position="144">
+              <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KeyboardMapping.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/KeyboardMapping.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="850">
+              <caret line="182" column="38" selection-start-line="182" selection-start-column="38" selection-end-line="182" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -140,8 +141,8 @@
       <file leaf-file-name="Packets.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Packets.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
-              <caret line="40" column="24" selection-start-line="40" selection-start-column="24" selection-end-line="40" selection-end-column="24" />
+            <state relative-caret-position="576">
+              <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -155,14 +156,16 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/DumpParser.h" />
         <option value="$PROJECT_DIR$/DumpParser.cpp" />
-        <option value="$PROJECT_DIR$/Packets.h" />
         <option value="$PROJECT_DIR$/Keyboard.h" />
+        <option value="$PROJECT_DIR$/Packets.h" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/Keyboard.cpp" />
-        <option value="$PROJECT_DIR$/main.cpp" />
+        <option value="$PROJECT_DIR$/KeyboardPainting.h" />
+        <option value="$PROJECT_DIR$/KeyboardMapping.cpp" />
         <option value="$PROJECT_DIR$/Definitions.h" />
+        <option value="$PROJECT_DIR$/main.cpp" />
       </list>
     </option>
   </component>
@@ -174,10 +177,10 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="65" />
-    <option name="y" value="-4" />
-    <option name="width" value="3775" />
-    <option name="height" value="2164" />
+    <option name="x" value="105" />
+    <option name="y" value="24" />
+    <option name="width" value="3104" />
+    <option name="height" value="2136" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -439,24 +442,32 @@
       <workItem from="1485710982981" duration="172000" />
       <workItem from="1487773762375" duration="445000" />
       <workItem from="1487796809870" duration="1774000" />
-      <workItem from="1487951679834" duration="28946000" />
+      <workItem from="1487951679834" duration="39279000" />
     </task>
+    <task id="LOCAL-00001" summary="Added all keys to the list. Fixed stuff. Better implementation of static keys. Implementation of reactive keys.">
+      <created>1488070822169</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1488070822169</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62270000" />
+    <option name="totallyTimeSpent" value="72603000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="3775" height="2164" extended-state="6" />
+    <frame x="105" y="24" width="3104" height="2136" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24980132" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30380154" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32362932" sideWeight="0.36927152" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32808658" sideWeight="0.36823454" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32362932" sideWeight="0.6307285" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32808658" sideWeight="0.6317655" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31344008" sideWeight="0.37854305" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31344008" sideWeight="0.37774834" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -481,29 +492,17 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added all keys to the list. Fixed stuff. Better implementation of static keys. Implementation of reactive keys." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added all keys to the list. Fixed stuff. Better implementation of static keys. Implementation of reactive keys." />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///usr/include/c++/6/cstdlib">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1926">
-          <caret line="107" column="7" selection-start-line="107" selection-start-column="7" selection-end-line="107" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/include/hidapi/hidapi.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="45" column="49" selection-start-line="45" selection-start-column="49" selection-end-line="45" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/include/hidapi/hidapi.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2862">
@@ -818,14 +817,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="35" selection-start-line="11" selection-start-column="35" selection-end-line="11" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/include/c++/6/bits/basic_string.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
@@ -842,14 +833,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DumpParser.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/include/c++/6/bits/stl_vector.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="454">
@@ -858,57 +841,90 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DumpParser.cpp">
+    <entry file="file://$PROJECT_DIR$/DumpParser.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="98" column="62" selection-start-line="98" selection-start-column="62" selection-end-line="98" selection-end-column="62" />
-          <folding>
-            <element signature="e#46#69#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="270">
+          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Packets.h">
+    <entry file="file://$PROJECT_DIR$/DumpParser.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="40" column="24" selection-start-line="40" selection-start-column="24" selection-end-line="40" selection-end-column="24" />
-          <folding />
+        <state relative-caret-position="1404">
+          <caret line="78" column="57" selection-start-line="78" selection-start-column="57" selection-end-line="78" selection-end-column="57" />
+          <folding>
+            <element signature="e#46#69#0" expanded="true" />
+            <marker date="1488045319129" expanded="true" signature="2510:3897" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Keyboard.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+        <state relative-caret-position="648">
+          <caret line="46" column="20" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="41" selection-start-line="11" selection-start-column="41" selection-end-line="11" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Packets.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KeyboardPainting.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Keyboard.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="886">
-          <caret line="113" column="129" selection-start-line="113" selection-start-column="129" selection-end-line="113" selection-end-column="129" />
+        <state relative-caret-position="598">
+          <caret line="96" column="111" selection-start-line="96" selection-start-column="111" selection-end-line="96" selection-end-column="111" />
           <folding>
             <element signature="e#46#67#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
+    <entry file="file://$PROJECT_DIR$/KeyboardMapping.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="691">
-          <caret line="335" column="53" selection-start-line="335" selection-start-column="53" selection-end-line="335" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="850">
+          <caret line="182" column="38" selection-start-line="182" selection-start-column="38" selection-end-line="182" selection-end-column="38" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Definitions.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1310">
-          <caret line="168" column="24" selection-start-line="168" selection-start-column="24" selection-end-line="168" selection-end-column="24" />
+        <state relative-caret-position="940">
+          <caret line="192" column="27" selection-start-line="192" selection-start-column="27" selection-end-line="192" selection-end-column="27" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="152" column="38" selection-start-line="152" selection-start-column="38" selection-end-line="152" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

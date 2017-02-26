@@ -44,7 +44,7 @@ class Keyboard {
             return handle;
         }
 
-        void sendKeyBulkData(DisplayState state, int n, PacketColorBulkKeyData* data);
+        void sendKeyBulkData(DisplayState state, int n, PacketKeyDataEntry* data);
     private:
-        hid_device* handle;
+        hid_device* handle = nullptr;
 };

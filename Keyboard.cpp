@@ -3,7 +3,6 @@
 //
 
 #include "Keyboard.h"
-#include "Packets.h"
 
 #include <sstream>
 #include <iomanip>
@@ -92,10 +91,10 @@ void Keyboard::setStaticColor(DisplayState state, vector<pair<ColorKey, KeyColor
     int loop = 0;
     while(!copy.empty()){
         int size = min((int) copy.size(), 0x2A);
-        PacketColorBulkKeyData cdata[size];
+        PacketKeyDataEntry cdata[size];
         for(int i = 0;i<size;i++){
             auto it = copy.begin();
-            cdata[i] = PacketColorBulkKeyData{std::move(it->second), {0, 0, 0}, 0, 0x01, KeyColorType::STATIC, 0x00, std::move(it->first)}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
+            cdata[i] = PacketKeyDataEntry{it->second, {0, 0, 0}, 0, 0x01, KeyColorType::STATIC, 0x00, it->first}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
             copy.erase(copy.begin(), copy.begin()+1);
         }
         sendKeyBulkData(state, size, cdata);
@@ -108,10 +107,10 @@ void Keyboard::setReactiveColor(DisplayState state, std::vector<ReactiveKey> key
     int loop = 0;
     while(!copy.empty()){
         int size = min((int) copy.size(), 0x2A);
-        PacketColorBulkKeyData cdata[size];
+        PacketKeyDataEntry cdata[size];
         for(int i = 0;i<size;i++){
             auto it = copy.begin();
-            cdata[i] = PacketColorBulkKeyData{it->normal, it->active, it->speed * 100, 0x00, KeyColorType::REACTIVE, 100, it->key}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
+            cdata[i] = PacketKeyDataEntry{it->normal, it->active, it->speed * 100, 0x00, KeyColorType::REACTIVE, 100, it->key}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
             copy.erase(copy.begin(), copy.begin()+1);
         }
         sendKeyBulkData(state, size, cdata);
@@ -138,10 +137,10 @@ void Keyboard::setKeyMetaSlot(DisplayState state, int size, MetaPair keys, ...) 
 }
 
 void Keyboard::setKeyMetaSlot(DisplayState state, std::vector<std::pair<ColorKey, char>> keys) {
-    PacketColorBulkKeyData cdata[keys.size()];
+    PacketKeyDataEntry cdata[keys.size()];
     int i = 0;
     for(auto it = keys.begin(); it != keys.end(); it++)
-        cdata[i++] = PacketColorBulkKeyData{{0, 0, 0}, {0, 0, 0}, 0, it->second, KeyColorType::OFF, 0x00, it->first}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
+        cdata[i++] = PacketKeyDataEntry{{0, 0, 0}, {0, 0, 0}, 0, it->second, KeyColorType::OFF, 0x00, it->first}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
     sendKeyBulkData(state, keys.size(), cdata);
 }
 
@@ -156,22 +155,22 @@ void Keyboard::setDisplayState(DisplayState state) {
     hid_write(this->handle, buffer,bufferSize);
 }
 
-void Keyboard::sendKeyBulkData(DisplayState state, int n, PacketColorBulkKeyData *data) {
-    int bufferSize = 0x04 + 0x01 + (n + 1) * sizeof(PacketColorBulkKeyData); //+1 for end delimiter
-    unsigned char buffer[bufferSize];
+void Keyboard::sendKeyBulkData(DisplayState state, int n, PacketKeyDataEntry *data) {
+    int bufferSize = 0x04 + n * sizeof(PacketKeyDataEntry); //+1 for end delimiter
+    uint8_t buffer[bufferSize];
     memset(buffer, 0, bufferSize);
 
-    int index = 1;
+    int index = 0;
 
     buffer[index++] = 0x0E; // |
     buffer[index++] = 0x00; // | Short (packetId)
 
-    buffer[index++] = n; // | To override buffer
+    buffer[index++] = (uint8_t) n; // | Override length? Keyboard must have 4 or more sections
     buffer[index++] = state;
 
     for(int i = 0;i<n;i++){
-        memcpy(buffer + index, &data[i], sizeof(PacketColorBulkKeyData));
-        index += sizeof(PacketColorBulkKeyData);
+        memcpy(buffer + index, &data[i], sizeof(PacketKeyDataEntry));
+        index += sizeof(PacketKeyDataEntry);
     }
 
     hid_send_feature_report(this->handle, buffer, bufferSize);

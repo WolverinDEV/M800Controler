@@ -1,30 +1,9 @@
-//
-// Created by wolverindev on 14.01.17.
-//
+/**
+ * ATTANTION: This file is only for the german keyboard. English or other types are maybe not working fully working!
+ */
 #pragma once
-#define LAYOUT_GERMAN
 
 #include <string>
-/*
-	A: 0x04
-	B: 0x05
-	...
-	Y: 0x1C
-	Z: 0x1D
-	INSERT: 0x49
-	HOME: 0x4A
-	PIC_UP: 0x4A
-	DEL: 0x4B
-	END: 0x4C
-	PIC_DOWN: 0x4D
-	ARROW_RIGHT: 0x4F
-	ARROW_LEFT: 0x50
-	ARROW_DOWN: 0x51
-	ARROW_UP: 0x52
-	NUM_1: 0x59
-	NUM_9: 0x61
-	NUM_0: 0x62
- */
 
 enum DisplayState {
     ACTIVE,
@@ -166,7 +145,7 @@ enum ColorKey : unsigned char {
     ALT_GR,
     UNKNOWN7,
 
-    HOTKEY_0/* = 0xE8*/,
+    HOTKEY_0 = 0xE8,
     HOTKEY_1,
     HOTKEY_2,
     HOTKEY_3,
@@ -175,7 +154,9 @@ enum ColorKey : unsigned char {
     HOTKEY_FIRST = HOTKEY_0,
     HOTKEY_LAST = HOTKEY_5,
 
-    TOGGLE_KEY = 0xEF //(The steelseries switch key)
+    TOGGLE_KEY = 0xEF, //(The steelseries switch key)
+
+    EMPTY = 0xFF
 };
 
 struct KeyColor {
@@ -200,6 +181,17 @@ struct KeyColor {
     KeyColor operator-(KeyColor color){
         KeyColor copy = {r, g, b};
         return copy -= color;
+    }
+
+    KeyColor&operator>>(int rounds){
+        for(int i = 0;i<rounds;i++){
+            auto oldR = r;
+            auto oldG = g;
+            auto oldB = b;
+            this->r = oldB;
+            this->g = oldR;
+            this->b = oldG;
+        }
     }
 
     std::string asString(){

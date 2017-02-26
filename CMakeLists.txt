@@ -9,5 +9,6 @@ set(SOURCE_FILES main.cpp
 		Definitions.h
 		Keyboard.cpp Keyboard.h
 		Packets.h
+		KeyboardPainting.h KeyboardMapping.cpp
 		DumpParser.cpp DumpParser.h)
 add_executable(M800Controler ${SOURCE_FILES})

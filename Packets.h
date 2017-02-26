@@ -20,11 +20,11 @@
 		0x01 G
 		0x02 B
 	Unknown[8]
-		0x06 -> most 0x2C
-		0x07 -> most 0x01  |
-		0x08 -> most 0x00  | Short?
-		0x09 -> Color type |
-		0x0A -> most 0x00  | Short
+		0x06 -> most 0x2C  |
+		0x07 -> most 0x01  | Short -> Reactive speed in 10ms intervall
+		0x08 -> most 0x00  -> Meta ID
+		0x09 -> Color type
+		0x0A -> most 0x00
 	key:
 		0x0B (Isnt equal to VK)
  */
@@ -35,7 +35,7 @@ struct Packet {
     short packetId;
 } PacketData;
 
-struct PacketColorBulkKeyData {
+struct PacketKeyDataEntry {
     KeyColor mainColor;
     KeyColor secondaryColor;
     unsigned short speed;
@@ -46,19 +46,19 @@ struct PacketColorBulkKeyData {
 } PacketData;
 
 struct PacketDisplayState : Packet {
-    char state;
+    uint8_t state;
     PacketDisplayState(DisplayState state){
         packetId = 0x0D;
         this->state = state;
     }
 } PacketData;
 
-struct PacketColorEntry {
-    unsigned char red;
-    unsigned char green;
-    unsigned char blue;
+struct FadeColorEntry {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
 
-    KeyColor asColor(){
+    KeyColor getColor(){
         return {red, green, blue};
     }
 
@@ -69,18 +69,18 @@ struct PacketColorEntry {
     char b7;
 } PacketData;
 
-struct PacketColorData : Packet {
-    PacketColorData(){
+struct PacketFadeColorData : Packet {
+    PacketFadeColorData(){
         packetId = 0x0B;
         memset(startColors, 0, 6);
-        memset(entries, 0, 16*sizeof(PacketColorEntry));
+        memset(entries, 0, 16*sizeof(FadeColorEntry));
         b1 = 0xff;
         memset(b2, 0, 11);
         memset(zeroDelimiter, 0, 8);
     }
 
     short metaId;
-    PacketColorEntry entries[16]; //Max transfared 11 lol
+    FadeColorEntry entries[16]; //Max transfared 11 lol
 
     char startColors[6]; // F0 0F F0 0F F0 0F -> FF FF FF |  00 00 00 00 00 00 -> 00 00 00
 
