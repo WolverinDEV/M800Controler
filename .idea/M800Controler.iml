@@ -4,9 +4,11 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Keyboard.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Packets.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Definitions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/DumpParser.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Packets.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/DumpParser.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Keyboard.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Keyboard.cpp" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
