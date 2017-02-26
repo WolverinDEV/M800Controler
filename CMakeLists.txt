@@ -3,7 +3,7 @@ project(M800Controler)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fpermissive")
 
-link_libraries(hidapi-hidraw usb)
+link_libraries(hidapi-hidraw usb /usr/local/lib/libCXXTerminal.so)
 
 set(SOURCE_FILES main.cpp
 		include/Steelseries/Definitions.h

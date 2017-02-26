@@ -3,6 +3,7 @@
 #include <cstring>
 #include <stdlib.h>
 #include <unistd.h>
+#include <typeinfo>
 #include "include/Steelseries/USBPackets.h"
 #include "include/Steelseries/Keyboard.h"
 #include "include/Steelseries/KeyboardPainting.h"
