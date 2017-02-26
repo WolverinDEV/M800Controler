@@ -6,7 +6,7 @@
 
 #include "Definitions.h"
 namespace Mapping {
-    extern ColorKey** buildMapping();
+    extern ColoredKey** buildMapping();
 
-    //extern ColorKey** rowMapping;
+    extern ColoredKey** rowMapping;
 }

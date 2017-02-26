@@ -1,44 +1,42 @@
 #include <iostream>
 #include <hidapi/hidapi.h>
-#include <cstdlib>
 #include <cstring>
 #include <stdlib.h>
 #include <unistd.h>
-#include "Packets.h"
-#include "Keyboard.h"
-#include "DumpParser.h"
-#include "KeyboardPainting.h"
-
-#define MAX_STR 255
+#include "include/Steelseries/USBPackets.h"
+#include "include/Steelseries/Keyboard.h"
+#include "include/Steelseries/KeyboardPainting.h"
 
 using namespace std;
+using namespace Steelseries::M800;
+using namespace Steelseries::USB::Packets;
 
 Keyboard* keyboard;
 
 void doFanciStuff(DisplayState state){
-    std::vector<std::pair<ColorKey, KeyColor>> newMap;
+    std::vector<std::pair<ColoredKey, KeyColor>> newMap;
 
     KeyColor color = {rand() % 256,rand() % 256,rand() % 256};
 
 
-    for(ColorKey key = ColorKey::FUNCTIONAL_FIRST; key <= ColorKey::FUNCTIONAL_LAST; key = key + 1)
+    for(ColoredKey key = ColoredKey::FUNCTIONAL_FIRST; key <= ColoredKey::FUNCTIONAL_LAST; key = key + 1)
         newMap.push_back({key, color});
     /**
         * Update the num pad
         */
 
-    for(ColorKey key = ColorKey::NUM_1; key <= ColorKey::NUM_0; key = key + 1)
+    for(ColoredKey key = ColoredKey::NUM_1; key <= ColoredKey::NUM_0; key = key + 1)
         newMap.push_back({key, color});
 
-    for(ColorKey key = ColorKey::NUM_SLASH; key <= ColorKey::NUM_ENTER; key = key + 1)
+    for(ColoredKey key = ColoredKey::NUM_SLASH; key <= ColoredKey::NUM_ENTER; key = key + 1)
         newMap.push_back({key, color});
-    newMap.push_back({ColorKey::NUM_COMMA, color});
+    newMap.push_back({ColoredKey::NUM_COMMA, color});
 
     color = {rand() % 256,rand() % 256,rand() % 256};
     /**
      * Updating the hotkeys
      */
-    for(ColorKey key = ColorKey::HOTKEY_FIRST; key <= ColorKey::HOTKEY_LAST; key = key + 1)
+    for(ColoredKey key = ColoredKey::HOTKEY_FIRST; key <= ColoredKey::HOTKEY_LAST; key = key + 1)
         newMap.push_back({key, color});
 
 
@@ -47,13 +45,13 @@ void doFanciStuff(DisplayState state){
      * Update the mid layer!
      */
 
-    for(ColorKey key = ColorKey::ARROW_RIGHT; key <= ColorKey::ARROW_UP; key = key + 1)
+    for(ColoredKey key = ColoredKey::ARROW_RIGHT; key <= ColoredKey::ARROW_UP; key = key + 1)
         newMap.push_back({key, color});
 
-    for(ColorKey key = ColorKey::KEY_PRINT; key <= ColorKey::KEY_PAUSE; key = key + 1)
+    for(ColoredKey key = ColoredKey::KEY_PRINT; key <= ColoredKey::KEY_PAUSE; key = key + 1)
         newMap.push_back({key, color});
 
-    for(ColorKey key = ColorKey::INSERT; key <= ColorKey::PIC_DOWN; key = key + 1)
+    for(ColoredKey key = ColoredKey::INSERT; key <= ColoredKey::PIC_DOWN; key = key + 1)
         newMap.push_back({key, color});
 
 
@@ -63,18 +61,18 @@ void doFanciStuff(DisplayState state){
      * Special character keys
      */
 
-    for(ColorKey key = ColorKey::KEY_SS; key <= ColorKey::KEY_MINUS; key = key + 1)
+    for(ColoredKey key = ColoredKey::KEY_SS; key <= ColoredKey::KEY_MINUS; key = key + 1)
         newMap.push_back({key, color});
-    newMap.push_back({ColorKey::KEY_SMALER_THEN, color});
+    newMap.push_back({ColoredKey::KEY_SMALER_THEN, color});
 
     /**
      * Update all normal characters
      */
 
-    for(ColorKey key = ColorKey::NUMBER_FIRST; key <= ColorKey::NUMBER_LAST; key = key + 1)
+    for(ColoredKey key = ColoredKey::NUMBER_FIRST; key <= ColoredKey::NUMBER_LAST; key = key + 1)
         newMap.push_back({key, color});
 
-    for(ColorKey key = ColorKey::A; key <= ColorKey::Z; key = key + 1)
+    for(ColoredKey key = ColoredKey::A; key <= ColoredKey::Z; key = key + 1)
         newMap.push_back({key, color});
 
 
@@ -82,12 +80,12 @@ void doFanciStuff(DisplayState state){
      * Text changing keys
      */
 
-    for(ColorKey key = ColorKey::KEY_ENTER; key <= ColorKey::KEY_TAB; key = key + 1)
+    for(ColoredKey key = ColoredKey::KEY_ENTER; key <= ColoredKey::KEY_TAB; key = key + 1)
         if(key != KEY_ESC)
             newMap.push_back({key, color});
-    newMap.push_back({ColorKey ::KEY_CAPSLOCK, color});
-    newMap.push_back({ColorKey ::CAPS_RIGHT, color});
-    newMap.push_back({ColorKey ::CAPS, color});
+    newMap.push_back({ColoredKey ::KEY_CAPSLOCK, color});
+    newMap.push_back({ColoredKey ::CAPS_RIGHT, color});
+    newMap.push_back({ColoredKey ::CAPS, color});
 
 
     color = {rand() % 256,rand() % 256,rand() % 256};
@@ -95,20 +93,20 @@ void doFanciStuff(DisplayState state){
      * Update all command keys
      */
 
-    newMap.push_back({ColorKey::CTRL, color});
-    newMap.push_back({ColorKey::CTRL_RIGHT, color});
-    newMap.push_back({ColorKey::ALT, color});
-    newMap.push_back({ColorKey::ALT_GR, color});
-    newMap.push_back({ColorKey::KEY_LIST, color});
-    newMap.push_back({ColorKey::KEY_ESC, color});
+    newMap.push_back({ColoredKey::CTRL, color});
+    newMap.push_back({ColoredKey::CTRL_RIGHT, color});
+    newMap.push_back({ColoredKey::ALT, color});
+    newMap.push_back({ColoredKey::ALT_GR, color});
+    newMap.push_back({ColoredKey::KEY_LIST, color});
+    newMap.push_back({ColoredKey::KEY_ESC, color});
 
 
     /**
      * Updateing the last (system depend) stuff
      */
-    newMap.push_back({ColorKey::WINDOWS_KEY, color});
-    newMap.push_back({ColorKey::LOGO, color});
-    newMap.push_back({ColorKey::TOGGLE_KEY, color});
+    newMap.push_back({ColoredKey::WINDOWS_KEY, color});
+    newMap.push_back({ColoredKey::LOGO, color});
+    newMap.push_back({ColoredKey::TOGGLE_KEY, color});
 
     keyboard->setStaticColor(state ,newMap);
 }
@@ -234,19 +232,19 @@ int main(){
     while(true){
         DisplayState state = DisplayState::ACTIVE;
         //std::vector<ReactiveKey> newMap;
-        std::vector<std::pair<ColorKey, KeyColor>> newMap;
+        std::vector<std::pair<ColoredKey, KeyColor>> newMap;
 
         if(animationLoopedCounter%5<3){
             //Shift the columns
             for(int i = 0;i<keysColumnsSize;i++){
                 for(int y = 0;y<6;y++) {
-                    ColorKey key = keyMapping[i][y];
-                    if(key != ColorKey::EMPTY){
+                    ColoredKey key = keyMapping[i][y];
+                    if(key != ColoredKey::EMPTY){
                         newMap.push_back({key, (i+round)%keysColumnsSize > (bulkSize-1) ? KeyColor{0,0,0} : mapping[(i+round)%keysColumnsSize]});
                     }
                 }
             }
-            newMap.push_back({ColorKey::LOGO, mapping[0]});
+            newMap.push_back({ColoredKey::LOGO, mapping[0]});
             if((round-1)%keysColumnsSize == 0 && round != 1){
                 for(int i = 0;i<bulkSize;i++)
                     mapping[i] >> 1;
@@ -256,8 +254,8 @@ int main(){
             //Shift the rows!
             for(int i = 0;i<keysRowSize;i++){
                 for(int x = 0;x<keysColumnsSize;x++){
-                    ColorKey key = keyMapping[x][keysRowSize-i-1];
-                    if(key != ColorKey::EMPTY){
+                    ColoredKey key = keyMapping[x][keysRowSize-i-1];
+                    if(key != ColoredKey::EMPTY){
                         if(i < rowMapping[round%rowMappingSize])
                             newMap.push_back({key, {0xff,0,0}});
                         else

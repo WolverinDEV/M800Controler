@@ -10,7 +10,7 @@ enum DisplayState {
     SLEEPING
 };
 
-enum ColorKey : unsigned char {
+enum ColoredKey : unsigned char {
     LOGO,
 
     A = 0x04,
@@ -194,13 +194,21 @@ struct KeyColor {
         }
     }
 
+    bool operator==(KeyColor other){
+        return other.r == r && other.g == g && other.b == b;
+    }
+
+    bool operator!=(KeyColor other){
+        return !(other == *this);
+    }
+
     std::string asString(){
         return "{"+std::to_string(r)+", "+std::to_string(g) +", "+std::to_string(b) +"}";
     }
 };
 
 struct ReactiveKey {
-    ColorKey key;
+    ColoredKey key;
     KeyColor normal;
     KeyColor active;
     float speed; //Speed in seconds

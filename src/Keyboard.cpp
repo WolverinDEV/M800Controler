@@ -2,60 +2,15 @@
 // Created by wolverindev on 14.01.17.
 //
 
-#include "Keyboard.h"
+#include "../include/Steelseries/Keyboard.h"
 
+#include <cmath>
 #include <sstream>
 #include <iomanip>
 
 using namespace std;
-void hexDump (void *addr, int len, int pad, void (*print)(string)) {
-    int i;
-    unsigned char buff[pad+1];
-    unsigned char *pc = (unsigned char*)addr;
-
-    if (len <= 0) {
-        return;
-    }
-
-    stringstream line;
-    line << uppercase << hex << setfill('0');
-    // Process every byte in the data.
-    for (i = 0; i < len; i++) {
-        // Multiple of 16 means new line (with line offset).
-
-        if ((i % pad) == 0) {
-            // Just don't print ASCII for the zeroth line.
-            if (i != 0)
-                line << buff << endl;
-
-            // Output the offset.
-            line << setw(4) << i << "    ";
-        }
-        if(i % 8 == 0 && i % pad != 0){
-            line << "| ";
-        }
-
-        // Now the hex code for the specific character.
-        line << setw(2) << (int) pc[i] << " ";
-
-        // And store a printable ASCII character for later.
-        if ((pc[i] < 0x20) || (pc[i] > 0x7e))
-            buff[i % pad] = '.';
-        else
-            buff[i % pad] = pc[i];
-        buff[(i % pad) + 1] = '\0';
-    }
-
-    // Pad out last line if not exactly 16 characters.
-    while ((i % pad) != 0) {
-        line << "   ";
-        i++;
-    }
-
-    line << buff << endl;
-    line << "Length: " << dec << len << " Addr: " << addr << endl;
-    print(line.str());
-}
+using namespace Steelseries::M800;
+using namespace Steelseries::USB::Packets;
 
 using namespace std;
 Keyboard::Keyboard(unsigned short vendor_id, unsigned short product_id, const wchar_t *serial_number) : handle(nullptr) {
@@ -68,15 +23,15 @@ bool Keyboard::isValid() {
     return true;
 }
 
-void Keyboard::setStaticColor(DisplayState state, ColorKey key, KeyColor color) {
-    vector<pair<ColorKey, KeyColor>> vec;
+void Keyboard::setStaticColor(DisplayState state, ColoredKey key, KeyColor color) {
+    vector<pair<ColoredKey, KeyColor>> vec;
     vec.push_back({key, color});
     setStaticColor(state, vec);
 }
 
-typedef pair<ColorKey, KeyColor> ColorPair;
+typedef pair<ColoredKey, KeyColor> ColorPair;
 void Keyboard::setStaticColor(DisplayState state, int size, ColorPair keys, ...) {
-    vector<pair<ColorKey, KeyColor>> ckeys;
+    vector<pair<ColoredKey, KeyColor>> ckeys;
     va_list zeiger;
     va_start(zeiger, keys);
     for(int i = 0;i<size;i++){
@@ -86,15 +41,19 @@ void Keyboard::setStaticColor(DisplayState state, int size, ColorPair keys, ...)
     setStaticColor(state, ckeys);
 }
 
-void Keyboard::setStaticColor(DisplayState state, vector<pair<ColorKey, KeyColor>> keys) {
-    vector<pair<ColorKey, KeyColor>> copy = vector<pair<ColorKey, KeyColor>>(keys);
+void Keyboard::setStaticColor(DisplayState state, vector<pair<ColoredKey, KeyColor>> keys) {
+    vector<pair<ColoredKey, KeyColor>> copy = vector<pair<ColoredKey, KeyColor>>(keys);
     int loop = 0;
     while(!copy.empty()){
         int size = min((int) copy.size(), 0x2A);
         PacketKeyDataEntry cdata[size];
-        for(int i = 0;i<size;i++){
+        for(int i = 0;i<size && !copy.empty();i++){
             auto it = copy.begin();
-            cdata[i] = PacketKeyDataEntry{it->second, {0, 0, 0}, 0, 0x01, KeyColorType::STATIC, 0x00, it->first}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
+            auto key = this->changeKeyType<KeyData>(it->first, KeyColorType::STATIC);
+            if(key->color != it->second){
+                cdata[i] = PacketKeyDataEntry{it->second, {0, 0, 0}, 0, 0x01, KeyColorType::STATIC, 0x00, it->first}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
+                key->color = it->second;
+            } else i--;
             copy.erase(copy.begin(), copy.begin()+1);
         }
         sendKeyBulkData(state, size, cdata);
@@ -108,9 +67,15 @@ void Keyboard::setReactiveColor(DisplayState state, std::vector<ReactiveKey> key
     while(!copy.empty()){
         int size = min((int) copy.size(), 0x2A);
         PacketKeyDataEntry cdata[size];
-        for(int i = 0;i<size;i++){
+        for(int i = 0;i<size && !copy.empty();i++){
             auto it = copy.begin();
-            cdata[i] = PacketKeyDataEntry{it->normal, it->active, it->speed * 100, 0x00, KeyColorType::REACTIVE, 100, it->key}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
+            auto key = this->changeKeyType<ReactiveKeyData>(it->key, KeyColorType::REACTIVE);
+            if(key->color != it->normal || key->reactiveColor != it->active || key->speed != it->speed){
+                key->color = it->normal;
+                key->reactiveColor = it->active;
+                key->speed = it->speed;
+                cdata[i] = PacketKeyDataEntry{it->normal, it->active, (uint16_t) floor(it->speed * 100), 0x00, KeyColorType::REACTIVE, 0x00, it->key}; //Active:  0x2C, 0x01, 0x00 Sleep: 0x00, 0x00, 0x09
+            } else i--;
             copy.erase(copy.begin(), copy.begin()+1);
         }
         sendKeyBulkData(state, size, cdata);
@@ -118,13 +83,13 @@ void Keyboard::setReactiveColor(DisplayState state, std::vector<ReactiveKey> key
     }
 }
 
-void Keyboard::setKeyMetaSlot(DisplayState state, ColorKey key, char slot) {
-    vector<pair<ColorKey, char>> vec;
+void Keyboard::setKeyMetaSlot(DisplayState state, ColoredKey key, char slot) {
+    vector<pair<ColoredKey, char>> vec;
     vec.push_back({key, slot});
     setKeyMetaSlot(state, vec);
 }
 
-typedef pair<ColorKey, char> MetaPair;
+typedef pair<ColoredKey, char> MetaPair;
 void Keyboard::setKeyMetaSlot(DisplayState state, int size, MetaPair keys, ...) {
     vector<MetaPair> ckeys;
     va_list zeiger;
@@ -136,7 +101,7 @@ void Keyboard::setKeyMetaSlot(DisplayState state, int size, MetaPair keys, ...) 
     setKeyMetaSlot(state, ckeys);
 }
 
-void Keyboard::setKeyMetaSlot(DisplayState state, std::vector<std::pair<ColorKey, char>> keys) {
+void Keyboard::setKeyMetaSlot(DisplayState state, std::vector<std::pair<ColoredKey, char>> keys) {
     PacketKeyDataEntry cdata[keys.size()];
     int i = 0;
     for(auto it = keys.begin(); it != keys.end(); it++)
@@ -174,5 +139,32 @@ void Keyboard::sendKeyBulkData(DisplayState state, int n, PacketKeyDataEntry *da
     }
 
     hid_send_feature_report(this->handle, buffer, bufferSize);
+}
 
+
+KeyData* Keyboard::getKey(ColoredKey key) {
+    if(this->keys.count(key) == 0){
+        KeyData* data = new KeyData;
+        data->key = key;
+        data->color = {0,0,0};
+        data->type = KeyColorType::OFF;
+        this->keys[key] = data;
+    }
+    return this->keys[key];
+}
+
+template <typename T>
+T* Keyboard::changeKeyType(ColoredKey key, KeyColorType type){
+    KeyData* data = getKey(key);
+    if(data->type != type || data->as<T>() == nullptr){
+        T* _new = new T;
+        KeyData* knew = (KeyData*) _new;
+        knew->type = type;
+        knew->key = key;
+        knew->color = data->color;
+        this->keys[key] = knew;
+        delete data;
+        data = knew;
+    }
+    return data->as<T>();
 }
